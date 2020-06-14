@@ -41,17 +41,23 @@ namespace DataLayer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateOfPublication")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("DateOfPublication")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Isbn")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Publisher")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReadDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");

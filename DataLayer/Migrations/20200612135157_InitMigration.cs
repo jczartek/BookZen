@@ -29,8 +29,10 @@ namespace DataLayer.Migrations
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Publisher = table.Column<string>(nullable: true),
-                    DateOfPublication = table.Column<DateTime>(nullable: false),
-                    Isbn = table.Column<string>(nullable: true)
+                    DateOfPublication = table.Column<int>(nullable: false),
+                    Isbn = table.Column<string>(nullable: true),
+                    IsRead = table.Column<bool>(nullable: false),
+                    ReadDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

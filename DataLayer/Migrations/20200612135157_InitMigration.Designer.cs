@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(DbCoreContext))]
-    [Migration("20200611134734_InitMigration")]
+    [Migration("20200612135157_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,17 +43,23 @@ namespace DataLayer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateOfPublication")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("DateOfPublication")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Isbn")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Publisher")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReadDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
