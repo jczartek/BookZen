@@ -13,11 +13,11 @@ using System.Windows.Shapes;
 namespace BookZen.Dialogs
 {
     /// <summary>
-    /// Interaction logic for CUInputDialog.xaml
+    /// Interaction logic for InputBookDialog.xaml
     /// </summary>
-    public partial class CUInputDialog : Window
+    public partial class InputBookDialog : Window
     {
-        public CUInputDialog()
+        public InputBookDialog()
         {
             InitializeComponent();
         }
