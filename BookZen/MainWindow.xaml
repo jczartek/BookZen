@@ -4,12 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookZen"
+        xmlns:mv="clr-namespace:BookZen.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow"  Width="400" Height="600">
+        Title="BookZen"  Width="600" Height="500">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
-    <StackPanel Margin="20,10,20,20">
-
-    </StackPanel>
+    <Window.DataContext>
+        <mv:MainViewModel />
+    </Window.DataContext>
+    <DockPanel Margin="3">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top">
+            <Button Content="Add Book" Style="{StaticResource BtnDarkStyle}"
+                    Command="{Binding ShowInputBookDialog}"/>
+        </StackPanel>
+        <ListBox Margin="0, 3">
+            
+        </ListBox>
+    </DockPanel>
 </Window>

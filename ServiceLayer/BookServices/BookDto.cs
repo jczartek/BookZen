@@ -11,7 +11,7 @@ namespace ServiceLayer.BookServices
         public int BookId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public int DateOfPublication { get; set; }
+        public int YearOfPublication { get; set; }
         public string Publisher { get; set; }
         public string Isbn { get; set; }
         public bool IsRead { get; set; }
@@ -23,14 +23,14 @@ namespace ServiceLayer.BookServices
         public string NameOfBorrower { get; set; }
         public DateTime DateBorrowing { get; set; }
 
-        public static BookDto MapBookDtoToBook(Book book)
+        public static BookDto MapBookToBookDto(Book book)
         {
             var bookDto = new BookDto()
             {
                 BookId = book.BookId,
                 Title = book.Title,
                 Description = book.Description,
-                DateOfPublication = book.DateOfPublication,
+                YearOfPublication = book.DateOfPublication,
                 Publisher = book.Publisher,
                 Isbn = book.Isbn,
                 IsRead = book.IsRead,
@@ -43,6 +43,23 @@ namespace ServiceLayer.BookServices
             };
 
             return bookDto;
+        }
+
+        public static Book MapBookDtoToBook(BookDto bookDto)
+        {
+            var book = new Book()
+            {
+                BookId = bookDto.BookId,
+                Title = bookDto.Title,
+                Description = bookDto.Description,
+                DateOfPublication = bookDto.YearOfPublication,
+                Publisher = bookDto.Publisher,
+                Isbn = bookDto.Isbn,
+                IsRead = bookDto.IsRead,
+                ReadDate = bookDto.ReadDate,
+            };
+
+            return book;
         }
 
     }

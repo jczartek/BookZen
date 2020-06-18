@@ -16,5 +16,10 @@ namespace DataLayer
 
             return new DbCoreContext(options.Options);
         }
+
+        public static DbCoreContext Create()
+        {
+            return new DbCoreContextFactory().CreateDbContext(null);
+        }
     }
 }

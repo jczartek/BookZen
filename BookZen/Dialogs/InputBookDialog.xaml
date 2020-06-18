@@ -4,58 +4,103 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookZen.Dialogs"
+        xmlns:mv="clr-namespace:BookZen.ViewModels"
         mc:Ignorable="d"
-        Title="Add/Update Book" Width="500" SizeToContent="Height" ResizeMode="NoResize" >
+        x:Name="MainWindow"
+        Title="Add/Update Book"
+        Width="500"
+        SizeToContent="Height"
+        ResizeMode="NoResize">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
+    <Window.DataContext>
+        <mv:BookDialogViewModel />
+    </Window.DataContext>
     
     <StackPanel Margin="20,10,20,20">
         
         <GroupBox Style="{StaticResource GroupBoxForForm}" Margin="5, 0, 5, 5">
             <GroupBox.Header>Information about the book:</GroupBox.Header>
             <StackPanel>
-                <Label Style="{StaticResource LabelForForm}" Content="Title:" />
-                <TextBox Style="{StaticResource FormInputStyle}"/>
+                <Label Style="{StaticResource LabelForForm}" 
+                       Content="Title:" />
+                <TextBox Style="{StaticResource FormInputStyle}" 
+                         Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Label Style="{StaticResource LabelForForm}" Content="Authors:"/>
-                <TextBox  Style="{StaticResource FormInputStyle}"/>
+                <Label Style="{StaticResource LabelForForm}" 
+                       Content="Authors:"/>
+                <TextBox Style="{StaticResource FormInputStyle}" 
+                         Text="{Binding Authors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Label Style="{StaticResource LabelForForm}" Content="ISBN:"/>
-                <TextBox   Style="{StaticResource FormInputStyle}"/>
+                <Label Style="{StaticResource LabelForForm}" 
+                       Content="ISBN:"/>
+                <TextBox Style="{StaticResource FormInputStyle}" 
+                         Text="{Binding Isbn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <Label Style="{StaticResource LabelForForm}" Content="Publisher:"/>
-                <TextBox  Style="{StaticResource FormInputStyle}" />
+                <Label Style="{StaticResource LabelForForm}" 
+                       Content="Publisher:"/>
+                <TextBox Style="{StaticResource FormInputStyle}" 
+                         Text="{Binding Publisher, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <Label Style="{StaticResource LabelForForm}" Content="Year of Publication:"/>
-                <TextBox  Style="{StaticResource FormInputStyle}" />
+                <Label Style="{StaticResource LabelForForm}"
+                       Content="Year of Publication:"/>
+                <TextBox Style="{StaticResource FormInputStyle}"
+                         Text="{Binding YearOfPublication, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <CheckBox x:Name="chBoxIsRead" Content="Is the book read?" Style="{StaticResource CheckBoxForForm}"/>
-                <DatePicker Margin="0, 5, 0, 0" Style="{StaticResource FormInputStyle}"
-                    Visibility="{Binding ElementName=chBoxIsRead, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
+                <CheckBox x:Name="chBoxIsRead"
+                          Content="Is the book read?"
+                          IsChecked="{Binding IsRead, Mode=TwoWay}"
+                          Style="{StaticResource CheckBoxForForm}"/>
+                <DatePicker Margin="0, 5, 0, 0"
+                            Style="{StaticResource FormInputStyle}"
+                            SelectedDate="{Binding ReadDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Visibility="{Binding ElementName=chBoxIsRead, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
 
-                <Label Style="{StaticResource LabelForForm}" Content="Description:" />
-                <ScrollViewer Height="70" VerticalScrollBarVisibility="Auto">
-                    <TextBox x:Name="tBoxDescription"  Style="{StaticResource FormInputStyle}" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <Label Style="{StaticResource LabelForForm}"
+                       Content="Description:" />
+                <ScrollViewer Height="70"
+                              VerticalScrollBarVisibility="Auto">
+                    <TextBox x:Name="tBoxDescription"
+                             Style="{StaticResource FormInputStyle}"
+                             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"/>
                 </ScrollViewer>
-                <CheckBox x:Name="chIsOnLoan" Content="Is the book on loan?" Style="{StaticResource CheckBoxForForm}" />
+                <CheckBox x:Name="chIsOnLoan"
+                          Content="Is the book on loan?"
+                          IsChecked="{Binding IsOnLoan, Mode=TwoWay}"
+                          Style="{StaticResource CheckBoxForForm}"/>
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Style="{StaticResource GroupBoxForForm}" Margin="5" Visibility="{Binding ElementName=chIsOnLoan, Path=IsChecked, Converter={StaticResource BoolToVisibility}}">
+        <GroupBox Style="{StaticResource GroupBoxForForm}"
+                  Margin="5"
+                  Visibility="{Binding ElementName=chIsOnLoan, Path=IsChecked, Converter={StaticResource BoolToVisibility}}">
             <GroupBox.Header>Details of the borrower</GroupBox.Header>
             <StackPanel>
-                <Label Style="{StaticResource LabelForForm}" Content="Name:" />
-                <TextBox  Style="{StaticResource FormInputStyle}" />
-                <Label  Style="{StaticResource LabelForForm}" Content="Book borrowing date:" />
-                <DatePicker Style="{StaticResource FormInputStyle}"/>
+                <Label Style="{StaticResource LabelForForm}"
+                       Content="Name:"/>
+                <TextBox Style="{StaticResource FormInputStyle}"
+                         Text="{Binding NameOfBorrower, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Style="{StaticResource LabelForForm}"
+                       Content="Book borrowing date:"/>
+                <DatePicker Style="{StaticResource FormInputStyle}"
+                            SelectedDate="{Binding DateBorrowing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </GroupBox>
         
-        <WrapPanel HorizontalAlignment="Right" Margin="0, 4, 5, 0">
-            <Button IsDefault="True" Margin="0,0,10,0" Style="{StaticResource BtnPrimaryStyle}"
+        <WrapPanel HorizontalAlignment="Right"
+                   Margin="0, 4, 5, 0">
+            <Button IsDefault="True"
+                    Margin="0,0,10,0"
+                    Style="{StaticResource BtnPrimaryStyle}"
+                    Command="{Binding SaveCommand}"
+                    CommandParameter="{Binding ElementName=MainWindow}"
                     Content="Save"/>
-            <Button IsCancel="True" Content="Cancel" Style="{StaticResource BtnDangerStyle}"/>
+            <Button IsCancel="True"
+                    Content="Cancel"
+                    Style="{StaticResource BtnDangerStyle}"/>
         </WrapPanel>
         
     </StackPanel>
