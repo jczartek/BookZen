@@ -1,7 +1,9 @@
 ﻿using DataLayer;
 using DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ServiceLayer.BookServices
@@ -71,13 +73,50 @@ namespace ServiceLayer.BookServices
             return this;
         }
 
-        public void SaveToDatabase()
+        public BookDto SaveToDatabase()
         {
             using (var dbContext = DbCoreContextFactory.Create())
             {
-                var book = BookDto.MapBookDtoToBook(BookDto);
+                
+                var book = BookDto.MapBookDtoToBook();
                 dbContext.Add(book);
                 dbContext.SaveChanges();
+            }
+            return BookDto;
+        }
+
+        public static BookDto FindBookByIsbn(string isbn)
+        {
+            using (var dbContext = DbCoreContextFactory.Create())
+            {
+                try
+                {
+                    var dto =  dbContext.Books
+                        .AsNoTracking()
+                        .Include(b => b.AuthorsLink)
+                            .ThenInclude(aL => aL.Author)
+                        .Single(b => b.Isbn == isbn)
+                        .MapBookToBookDto();
+
+                    return dto;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static List<BookDto> GetAllBooks()
+        {
+            using (var dbContext = DbCoreContextFactory.Create())
+            {
+                return dbContext.Books
+                    .AsNoTracking()
+                    .Include(i => i.AuthorsLink)
+                    .ThenInclude(i => i.Author)
+                    .Select(x => x.MapBookToBookDto())
+                    .ToList();
             }
         }
     }

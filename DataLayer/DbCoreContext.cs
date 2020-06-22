@@ -19,6 +19,18 @@ namespace DataLayer
         {
             modelBuilder.Entity<BookAuthor>()
                 .HasKey(obj => new { obj.BookId, obj.AuthorId });
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(pt => pt.Book)
+                .WithMany(p => p.AuthorsLink)
+                .HasForeignKey(pt => pt.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(pt => pt.Author)
+                .WithMany(t => t.BooksLink)
+                .HasForeignKey(pt => pt.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

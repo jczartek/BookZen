@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:BookZen"
         xmlns:mv="clr-namespace:BookZen.ViewModels"
         mc:Ignorable="d"
-        Title="BookZen"  Width="600" Height="500">
+        Title="BookZen"
+        SizeToContent="Width"
+        Height="500">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
@@ -14,12 +16,98 @@
         <mv:MainViewModel />
     </Window.DataContext>
     <DockPanel Margin="3">
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top">
-            <Button Content="Add Book" Style="{StaticResource BtnDarkStyle}"
-                    Command="{Binding ShowInputBookDialog}"/>
-        </StackPanel>
-        <ListBox Margin="0, 3">
-            
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Column="0" Grid.Row="0">
+            </DockPanel>
+
+            <TextBox Grid.Column="1"
+                     Width="200"
+                     Style="{StaticResource FormInputStyle}" />
+
+            <DockPanel Grid.Column="2" Grid.Row="0">
+                <Button Content="Add Book"
+                    Style="{StaticResource BtnDarkStyle}"
+                    Command="{Binding ShowInputBookDialog}" />
+            </DockPanel>
+        </Grid>
+
+        <StatusBar DockPanel.Dock="Bottom" Background="Transparent">
+            <StatusBarItem>
+                <Label Style="{StaticResource LabelForForm}">
+                    <TextBlock Text="{Binding Books.Count, StringFormat=Number of Books: {0}}" />
+                </Label>
+            </StatusBarItem>
+        </StatusBar>
+
+        <ListBox Margin="2, 3" 
+                 ItemsSource="{Binding Books}"
+                 Foreground="#343a40"           
+                 Grid.IsSharedSizeScope="True">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Focusable" Value="False" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="col1"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock 
+                            Text="{Binding Title}"
+                            FontSize="18"
+                            FontWeight="Medium"
+                            Grid.Column="0" 
+                            Grid.Row="0" />
+                        <TextBlock 
+                            Text="{Binding Authors, Mode=OneWay, StringFormat=by {0}}"
+                            FontSize="14"
+                            FontWeight="Regular"
+                            FontStyle="Italic"
+                            Grid.Column="0" 
+                            Grid.Row="1" />
+                        <StackPanel
+                            Margin="10, 0, 5, 0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Grid.Column="1"
+                            Orientation="Horizontal" >
+                            <Button Content="Details"
+                                    Style="{StaticResource BtnPrimaryStyle}"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.ShowDetailsCommand}"
+                                    CommandParameter="{Binding BookId}"/>
+                            <Button Content="Update"
+                                    Style="{StaticResource BtnPrimaryStyle}"
+                                    Margin="10, 0"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.UpdateBookCommand}"
+                                    CommandParameter="{Binding BookId}"/>
+                            <Button Content="Delete"
+                                    Style="{StaticResource BtnDangerStyle}"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.DeleteBookCommand}"
+                                    CommandParameter="{Binding BookId}"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
+
     </DockPanel>
 </Window>

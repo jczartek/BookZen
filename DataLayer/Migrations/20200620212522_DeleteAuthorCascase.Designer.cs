@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(DbCoreContext))]
-    [Migration("20200612135157_InitMigration")]
-    partial class InitMigration
+    [Migration("20200620212522_DeleteAuthorCascase")]
+    partial class DeleteAuthorCascase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
