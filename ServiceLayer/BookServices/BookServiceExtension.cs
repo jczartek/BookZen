@@ -1,4 +1,6 @@
-﻿using DataLayer.Entities;
+﻿using DataLayer;
+using DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,22 +30,63 @@ namespace ServiceLayer.BookServices
             return bookDto;
         }
 
+        private static BookAuthor GetBookAuthorById(int bookId, int authorId)
+        {
+            using (var ctx = DbCoreContextFactory.Create())
+            {
+                return ctx.Books.Include(i => i.AuthorsLink)
+                                .ThenInclude(i => i.Author)
+                                .Single(x => x.BookId == bookId)
+                                .AuthorsLink
+                                .SingleOrDefault(x => x.BookId == bookId && x.AuthorId == authorId);
+            }
+        }
+
+        private static void DeleteAllBookAuthorsByBookId(int bookId)
+        {
+            using (var ctx = DbCoreContextFactory.Create())
+            {
+                var bookAuthors = ctx.Books.Include(i => i.AuthorsLink)
+                                .Single(x => x.BookId == bookId)
+                                .AuthorsLink;
+
+                if (bookAuthors != null)
+                {
+                    ctx.RemoveRange(bookAuthors);
+                    ctx.SaveChanges();
+                }
+            }
+        }
+
         private static List<BookAuthor> CreateBookAuthors(Book book, string authors)
         {
             var bookAuthors = new List<BookAuthor>();
 
-            foreach (var author in authors.Split(','))
-            {
-                var bookAuthor = new BookAuthor() { Book = book};
-                var newAuthor = AuthorService.FindAuthorByName(author.Trim());
+            if (book.BookId > 0)
+                DeleteAllBookAuthorsByBookId(book.BookId);
 
-                if (newAuthor != null)
-                    bookAuthor.AuthorId = newAuthor.AuthorId;
-                else
-                    bookAuthor.Author = new Author { Name = author.Trim() };
+            foreach (var athr in authors.Split(','))
+            {
+                var author = AuthorService.FindAuthorByName(athr.Trim());
+                BookAuthor bookAuthor = null;
+
+                if (author != null && book.BookId != 0)
+                {
+                    bookAuthor = GetBookAuthorById(book.BookId, author.AuthorId);
+                }
+               
+                if (bookAuthor == null)
+                {
+                    bookAuthor = new BookAuthor() { Book = book };
+
+                    if (author != null)
+                        bookAuthor.AuthorId = author.AuthorId;
+                    else
+                        bookAuthor.Author = new Author { Name = athr.Trim() };
+                }
+
                 bookAuthors.Add(bookAuthor);
             }
-
             return bookAuthors;
         }
         public static Book MapBookDtoToBook(this BookDto bookDto)

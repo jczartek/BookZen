@@ -2,6 +2,7 @@
 using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BookZen.ViewModels
@@ -22,7 +23,7 @@ namespace BookZen.ViewModels
                 return addBookCommand ??= new RelayCommand(
                     (parameter) =>
                     {
-                        new InputBookDialog().ShowDialog();
+                        new InputBookDialog(null).ShowDialog();
                         RaisePropertiesChanged(nameof(Books));
                     });
             }
@@ -36,7 +37,7 @@ namespace BookZen.ViewModels
                 return showDetailsCommand ??= new RelayCommand(
                     (parameter) =>
                     {
-                        throw new NotImplementedException();
+                        new DetailsBookDialog(BookService.FindBookById((int)parameter)).ShowDialog();
                     });
             }
         }
@@ -49,7 +50,8 @@ namespace BookZen.ViewModels
                 return updateBookCommand ??= new RelayCommand(
                     (parameter) =>
                     {
-                        throw new NotImplementedException();
+                        new InputBookDialog(BookService.FindBookById((int)parameter)).ShowDialog();
+                        RaisePropertiesChanged(nameof(Books));
                     });
             }
         }
@@ -62,7 +64,20 @@ namespace BookZen.ViewModels
                 return deleteBookCommand ??= new RelayCommand(
                     (parameter) =>
                     {
-                        throw new NotImplementedException();
+                        MessageBoxResult result = MessageBox.Show("Do you want to delete the book?",
+                            "Confirm deleting book",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+
+                        switch(result)
+                        {
+                            case MessageBoxResult.Yes:
+                                BookService.DeleteBook((int)parameter);
+                                RaisePropertiesChanged(nameof(Books));
+                                break;
+                            case MessageBoxResult.No:
+                                break;
+                        }
                     });
             }
         }

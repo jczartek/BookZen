@@ -14,10 +14,6 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
-    <Window.DataContext>
-        <mv:BookDialogViewModel />
-    </Window.DataContext>
-    
     <StackPanel Margin="20,10,20,20">
         
         <GroupBox Style="{StaticResource GroupBoxForForm}" Margin="5, 0, 5, 5">

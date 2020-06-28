@@ -22,6 +22,12 @@ namespace ServiceLayer.BookServices
             BookDto = new BookDto();
         }
 
+        public BookService Id(int id)
+        {
+            BookDto.BookId = id;
+            return this;
+        }
+
         public BookService Title(string title)
         {
             if (String.IsNullOrEmpty(title))
@@ -79,10 +85,13 @@ namespace ServiceLayer.BookServices
             {
                 
                 var book = BookDto.MapBookDtoToBook();
-                dbContext.Add(book);
+                if (book.BookId == default) dbContext.Add(book);
+                else dbContext.Update(book);
                 dbContext.SaveChanges();
+
+                BookDto.BookId = book.BookId;
+                return BookDto;
             }
-            return BookDto;
         }
 
         public static BookDto FindBookByIsbn(string isbn)
@@ -92,7 +101,6 @@ namespace ServiceLayer.BookServices
                 try
                 {
                     var dto =  dbContext.Books
-                        .AsNoTracking()
                         .Include(b => b.AuthorsLink)
                             .ThenInclude(aL => aL.Author)
                         .Single(b => b.Isbn == isbn)
@@ -119,5 +127,45 @@ namespace ServiceLayer.BookServices
                     .ToList();
             }
         }
+
+        public static void DeleteBook(int bookId)
+        {
+            using (var dbContext = DbCoreContextFactory.Create())
+            {
+                Book book = dbContext.Books.Find(bookId);
+
+                if (book != null)
+                {
+                    dbContext.Books.Remove(book);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        public static BookDto FindBookById(int bookId)
+        {
+            using (var dbContext = DbCoreContextFactory.Create())
+            {
+                return dbContext.Books
+                    .Include(i => i.AuthorsLink)
+                    .ThenInclude(i => i.Author)
+                    .Single(b => b.BookId == bookId)
+                    .MapBookToBookDto();
+            }
+        }
+
+        public static void UpdateBook(BookDto dto)
+        {
+            if (dto != null)
+            {
+                using (var dbContext = DbCoreContextFactory.Create())
+                {
+                    var book = dto.MapBookDtoToBook();
+                    dbContext.Update(book);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
     }
 }

@@ -15,18 +15,18 @@ using System.Windows.Shapes;
 namespace BookZen.Dialogs
 {
     /// <summary>
-    /// Interaction logic for InputBookDialog.xaml
+    /// Interaction logic for DetailsBookDialog.xaml
     /// </summary>
-    public partial class InputBookDialog : Window
+    public partial class DetailsBookDialog : Window
     {
-        private InputBookDialog()
+        private DetailsBookDialog()
         {
             InitializeComponent();
         }
 
-        public InputBookDialog(BookDto bookDto) : this()
+        public DetailsBookDialog(BookDto bookDto) : this()
         {
-            DataContext = new BookDialogViewModel(bookDto);
+            DataContext = new DetailsBookViewModel(bookDto);
         }
     }
 }

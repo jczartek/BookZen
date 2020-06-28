@@ -1,3 +1,4 @@
+using DataLayer.Entities;
 using NUnit.Framework;
 using ServiceLayer.BookServices;
 
@@ -47,6 +48,39 @@ namespace NUnitTestBookZen
 
             Assert.AreEqual(dto.Title, "DDD. Kompendium wiedzy");
             Assert.AreEqual(dto.Authors, "Vaughn Vernon");
+        }
+
+        [Test]
+        public void UpdateBook()
+        {
+            var dto = BookService.Init()
+                 .Title("Ksi¹¿ka do aktualizacji")
+                 .Authors("Nieznani")
+                 .SaveToDatabase();
+
+            Assert.Greater(dto.BookId, 0);
+
+            int bookId = dto.BookId;
+            dto.Title = "Tytu³ Siê zmieni³";
+
+            BookService.UpdateBook(dto);
+
+            dto = BookService.FindBookById(bookId);
+
+            Assert.AreEqual("Tytu³ Siê zmieni³", dto.Title);
+
+            dto.Authors = "Kowalski Jan, Kowalski Micha³";
+
+            BookService.UpdateBook(dto);
+
+            dto = BookService.FindBookById(bookId);
+
+            Assert.AreEqual("Kowalski Jan, Kowalski Micha³", dto.Authors);
+
+            dto = BookService.FindBookById(bookId);
+
+            BookService.DeleteBook(dto.BookId);
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BookZen.Dialogs;
+using DataLayer.Entities;
 using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,26 @@ namespace BookZen.ViewModels
 {
     public class BookDialogViewModel : ViewModelBase
     {
+        public BookDialogViewModel(BookDto bookDto)
+        {
+            if (bookDto != null)
+            {
+                _BookId = bookDto.BookId;
+                Title = bookDto.Title;
+                Authors = bookDto.Authors;
+                Description = bookDto.Description;
+                Publisher = bookDto.Publisher;
+                YearOfPublication = bookDto.YearOfPublication;
+                Isbn = bookDto.Isbn;
+                IsRead = bookDto.IsRead;
+                ReadDate = bookDto.ReadDate;
+                IsOnLoan = bookDto.IsOnLoan;
+                NameOfBorrower = bookDto.NameOfBorrower;
+                DateBorrowing = bookDto.DateBorrowing;
+            }
+        }
         #region Private Fields
+        private int _BookId;
         private string _Title;
         private string _Authors;
         private string _Description;
@@ -179,6 +199,7 @@ namespace BookZen.ViewModels
                     if (o is InputBookDialog dialog)
                     {
                         BookService.Init()
+                            .Id(_BookId)
                             .Title(Title)
                             .Authors(Authors)
                             .Description(Description)
