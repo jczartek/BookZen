@@ -35,10 +35,10 @@ namespace BookZen.ViewModels
         private string _Authors;
         private string _Description;
         private string _Publisher;
-        private int _YearOfPublication;
+        private int? _YearOfPublication;
         private string _Isbn;
         private bool _IsRead;
-        private DateTime _ReadDate = DateTime.Now;
+        private DateTime? _ReadDate = DateTime.Now;
         private bool _IsOnLoan;
         private string _NameOfBorrower;
         private DateTime _DateBorrowing = DateTime.Now;
@@ -110,7 +110,7 @@ namespace BookZen.ViewModels
             }
         }
 
-        public int YearOfPublication
+        public int? YearOfPublication
         {
             get => _YearOfPublication;
             set
@@ -136,7 +136,7 @@ namespace BookZen.ViewModels
             }
         }
 
-        public DateTime ReadDate
+        public DateTime? ReadDate
         {
             get => _ReadDate;
             set

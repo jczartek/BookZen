@@ -61,7 +61,7 @@ namespace ServiceLayer.BookServices
             return this;
         }
 
-        public BookService YearOfPublication(int yearOfPublication)
+        public BookService YearOfPublication(int? yearOfPublication)
         {
             BookDto.YearOfPublication = yearOfPublication;
             return this;

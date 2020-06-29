@@ -11,11 +11,11 @@ namespace ServiceLayer.BookServices
         public int BookId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public int YearOfPublication { get; set; }
+        public int? YearOfPublication { get; set; }
         public string Publisher { get; set; }
         public string Isbn { get; set; }
         public bool IsRead { get; set; }
-        public DateTime ReadDate { get; set; }
+        public DateTime? ReadDate { get; set; }
 
         public string Authors { get; set; }
         

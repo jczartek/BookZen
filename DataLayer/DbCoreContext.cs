@@ -17,6 +17,14 @@ namespace DataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Book>()
+                .Property(p => p.DateOfPublication)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Book>()
+                .Property(p => p.ReadDate)
+                .IsRequired(false);
+
             modelBuilder.Entity<BookAuthor>()
                 .HasKey(obj => new { obj.BookId, obj.AuthorId });
 
