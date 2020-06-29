@@ -48,8 +48,9 @@ namespace BookZen.ViewModels
         {
             get
             {
+                var date = BookDto.ReadDate.HasValue ? BookDto.ReadDate.Value.ToString("dd-MM-yyyy") : null;
                 var message = BookDto.IsRead
-                    ? $"Book was read on {BookDto.ReadDate}."
+                    ? $"Book was read on {date}."
                     : "The book has not been read yet.";
                 return message;
             }

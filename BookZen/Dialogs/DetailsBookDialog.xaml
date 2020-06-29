@@ -8,12 +8,24 @@
         Title="Information about book"
         SizeToContent="Height"
         Width="600">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="FontWeight" Value="ExtraLight" />
+            <Setter Property="Foreground">
+                <Setter.Value>
+                    <SolidColorBrush Color="{StaticResource _LabelForForm}" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <ScrollViewer DockPanel.Dock="Top" 
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
                       Height="300">
-            <StackPanel>
+            <StackPanel Margin="10,10,2,0">
                 <TextBlock Text="{Binding Title}"/>
                 <TextBlock Text="{Binding Authors}"/>
                 <TextBlock Text="{Binding Publisher}"/>
