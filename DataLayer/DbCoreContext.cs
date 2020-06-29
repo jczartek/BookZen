@@ -18,7 +18,7 @@ namespace DataLayer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Book>()
-                .Property(p => p.DateOfPublication)
+                .Property(p => p.YearOfPublication)
                 .IsRequired(false);
 
             modelBuilder.Entity<Book>()
