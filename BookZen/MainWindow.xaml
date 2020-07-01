@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookZen"
         xmlns:mv="clr-namespace:BookZen.ViewModels"
+        xmlns:conv="clr-namespace:BookZen.Converters"
         mc:Ignorable="d"
         Title="BookZen"
         SizeToContent="Width"
         Height="500">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:BoolToBrushConverter x:Key="BoolToBrushConverter" />
     </Window.Resources>
     <Window.DataContext>
         <mv:MainViewModel />
@@ -30,9 +32,9 @@
             <DockPanel Grid.Column="0" Grid.Row="0">
             </DockPanel>
 
-            <TextBox Grid.Column="1"
+            <!-- <TextBox Grid.Column="1"
                      Width="200"
-                     Style="{StaticResource FormInputStyle}" />
+                     Style="{StaticResource FormInputStyle}" /> -->
 
             <DockPanel Grid.Column="2" Grid.Row="0">
                 <Button Content="Add Book"
@@ -62,6 +64,7 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition SharedSizeGroup="col1"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
@@ -69,18 +72,36 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
+                        <Rectangle 
+                            Width="5" 
+                            Height="38" 
+                            VerticalAlignment="Center" 
+                            Fill="{Binding IsOnLoan, Mode=OneWay, 
+                                   Converter={StaticResource BoolToBrushConverter},
+                                   ConverterParameter={StaticResource _Red}}" 
+                            Grid.Row="0" 
+                            Grid.RowSpan="2" 
+                            Grid.Column="0" />
                         <TextBlock 
                             Text="{Binding Title}"
+                            Foreground="{Binding IsRead, 
+                                         Converter={StaticResource BoolToBrushConverter}, 
+                                         ConverterParameter={StaticResource _LabelForForm}}"
+                            Margin="3,0,0,0"
                             FontSize="18"
                             FontWeight="Medium"
-                            Grid.Column="0" 
+                            Grid.Column="1" 
                             Grid.Row="0" />
                         <TextBlock 
                             Text="{Binding Authors, Mode=OneWay, StringFormat=by {0}}"
+                            Margin="3,0,0,0"
                             FontSize="14"
                             FontWeight="Regular"
+                            Foreground="{Binding IsRead, 
+                                         Converter={StaticResource BoolToBrushConverter}, 
+                                         ConverterParameter={StaticResource _LabelForForm}}"
                             FontStyle="Italic"
-                            Grid.Column="0" 
+                            Grid.Column="1" 
                             Grid.Row="1" />
                         <StackPanel
                             Margin="10, 0, 5, 0"
@@ -88,7 +109,7 @@
                             VerticalAlignment="Center"
                             Grid.Row="0"
                             Grid.RowSpan="2"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Orientation="Horizontal" >
                             <Button Content="Details"
                                     Style="{StaticResource BtnPrimaryStyle}"
