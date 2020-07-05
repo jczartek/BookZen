@@ -27,6 +27,12 @@ namespace ServiceLayer.BookServices
                 IsOnLoan = book.BookRental != null
             };
 
+            if (bookDto.IsOnLoan)
+            {
+                bookDto.NameOfBorrower = book.BookRental.Name;
+                bookDto.DateBorrowing = book.BookRental.DateBorrowing;
+            }
+
             return bookDto;
         }
 
@@ -74,7 +80,7 @@ namespace ServiceLayer.BookServices
                 {
                     bookAuthor = GetBookAuthorById(book.BookId, author.AuthorId);
                 }
-               
+
                 if (bookAuthor == null)
                 {
                     bookAuthor = new BookAuthor() { Book = book };
@@ -89,6 +95,41 @@ namespace ServiceLayer.BookServices
             }
             return bookAuthors;
         }
+
+        private static BookRental GetBookRentalByBookId(int bookId)
+        {
+            if (bookId == 0)
+                return null;
+
+            using (var ctx = DbCoreContextFactory.Create())
+            {
+                return ctx.BookRentals.SingleOrDefault(x => x.BookId == bookId);
+            }
+        }
+
+        private static bool HasBookRental(int bookId)
+        {
+            return GetBookRentalByBookId(bookId) != null;
+        }
+
+        private static void UpdateBookRental(BookRental bookRental)
+        {
+            using (var ctx = DbCoreContextFactory.Create())
+            {
+                ctx.BookRentals.Update(bookRental);
+                ctx.SaveChanges();
+            }
+        }
+
+        private static void DeleteBookRental(BookRental bookRental)
+        {
+            using (var ctx = DbCoreContextFactory.Create())
+            {
+                ctx.BookRentals.Remove(bookRental);
+                ctx.SaveChanges();
+            }
+        }
+
         public static Book MapBookDtoToBook(this BookDto bookDto)
         {
             var book = new Book()
@@ -105,6 +146,37 @@ namespace ServiceLayer.BookServices
 
             if (!String.IsNullOrWhiteSpace(bookDto.Authors))
                 book.AuthorsLink = CreateBookAuthors(book, bookDto.Authors);
+
+
+            var bookRental = GetBookRentalByBookId(book.BookId);
+            if (bookDto.IsOnLoan || bookRental != null)
+            {
+
+                if (bookRental != null && bookDto.IsOnLoan)
+                {
+                    if (bookRental.Name != bookDto.NameOfBorrower || bookRental.DateBorrowing != bookDto.DateBorrowing)
+                    {
+                        bookRental.Name = bookDto.NameOfBorrower;
+                        bookRental.DateBorrowing = bookDto.DateBorrowing;
+                        UpdateBookRental(bookRental);
+                    }
+                }
+                else if (bookRental != null && !bookDto.IsOnLoan)
+                {
+                    DeleteBookRental(bookRental);
+                    bookRental = null;
+                }
+                else
+                {
+                    bookRental = new BookRental
+                    {
+                        BookId = book.BookId,
+                        Name = bookDto.NameOfBorrower,
+                        DateBorrowing = bookDto.DateBorrowing
+                    };
+                }
+                book.BookRental = bookRental;
+            }
 
             return book;
         }

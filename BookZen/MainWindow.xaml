@@ -17,6 +17,16 @@
     <Window.DataContext>
         <mv:MainViewModel />
     </Window.DataContext>
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem 
+                Header="Edit mode"
+                IsCheckable="True"
+                IsChecked="False"
+                Command="{Binding SwitchEditModeCommand}"
+                CommandParameter="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"/>
+        </ContextMenu>
+    </Window.ContextMenu>
     <DockPanel Margin="3">
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
@@ -119,11 +129,13 @@
                                     Style="{StaticResource BtnPrimaryStyle}"
                                     Margin="10, 0"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.UpdateBookCommand}"
-                                    CommandParameter="{Binding BookId}"/>
+                                    CommandParameter="{Binding BookId}"
+                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.EditMode, Converter={StaticResource BoolToVisibility} }"/>
                             <Button Content="Delete"
                                     Style="{StaticResource BtnDangerStyle}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.DeleteBookCommand}"
-                                    CommandParameter="{Binding BookId}"/>
+                                    CommandParameter="{Binding BookId}"
+                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.EditMode, Converter={StaticResource BoolToVisibility} }"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

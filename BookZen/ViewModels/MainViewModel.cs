@@ -1,7 +1,9 @@
 ﻿using BookZen.Dialogs;
+using DataLayer.Entities;
 using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
+using System.Printing;
 using System.Windows;
 using System.Windows.Input;
 
@@ -12,6 +14,27 @@ namespace BookZen.ViewModels
         public List<BookDto> Books
         {
             get => BookService.GetAllBooks();
+        }
+
+        private bool editMode;
+        public bool EditMode
+        {
+            get => editMode;
+            set
+            {
+                editMode = value;
+                RaisePropertiesChanged(nameof(EditMode));
+            }
+        }
+
+        private ICommand switchEditModeCommand;
+        public ICommand SwitchEditModeCommand
+        {
+            get => switchEditModeCommand ??= new RelayCommand(
+                (parameter) =>
+                {
+                    EditMode = (bool)parameter;
+                });
         }
 
         private ICommand addBookCommand;

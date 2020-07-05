@@ -1,6 +1,7 @@
 using DataLayer.Entities;
 using NUnit.Framework;
 using ServiceLayer.BookServices;
+using System;
 
 namespace NUnitTestBookZen
 {
@@ -81,6 +82,41 @@ namespace NUnitTestBookZen
 
             BookService.DeleteBook(dto.BookId);
 
+        }
+
+        [Test]
+        public void TestBookRental()
+        {
+            var dto = BookService.Init()
+                .Title("Po¿yczona ksi¹¿ka")
+                .Authors("Kowalski Jan")
+                .IsBookOnLoan(true, x => { x.IsOnLoan = true; x.NameOfBorrower = "Kowalski Micha³"; x.DateBorrowing = DateTime.Now; })
+                .SaveToDatabase();
+
+            dto = BookService.FindBookById(dto.BookId);
+
+            Assert.IsTrue(dto.IsOnLoan);
+            Assert.AreEqual("Kowalski Micha³", dto.NameOfBorrower);
+            Assert.AreEqual(DateTime.Now.Day, dto.DateBorrowing.Day);
+            Assert.AreEqual(DateTime.Now.Month, dto.DateBorrowing.Month);
+            Assert.AreEqual(DateTime.Now.Year, dto.DateBorrowing.Year);
+
+            dto.NameOfBorrower = "Kowalska Ewa";
+            dto.DateBorrowing = new DateTime(2019, 01, 01);
+            BookService.UpdateBook(dto);
+
+            dto = BookService.FindBookById(dto.BookId);
+            Assert.IsTrue(dto.IsOnLoan);
+            Assert.AreEqual("Kowalska Ewa", dto.NameOfBorrower);
+            Assert.AreEqual(new DateTime(2019, 01, 01), dto.DateBorrowing);
+
+            dto.IsOnLoan = false;
+            BookService.UpdateBook(dto);
+
+            dto = BookService.FindBookById(dto.BookId);
+            Assert.IsFalse(dto.IsOnLoan);
+
+            BookService.DeleteBook(dto.BookId);
         }
     }
 }

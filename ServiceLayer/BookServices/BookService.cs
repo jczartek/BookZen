@@ -103,6 +103,7 @@ namespace ServiceLayer.BookServices
                     var dto =  dbContext.Books
                         .Include(b => b.AuthorsLink)
                             .ThenInclude(aL => aL.Author)
+                        .Include(b => b.BookRental)
                         .Single(b => b.Isbn == isbn)
                         .MapBookToBookDto();
 
@@ -123,6 +124,7 @@ namespace ServiceLayer.BookServices
                     .AsNoTracking()
                     .Include(i => i.AuthorsLink)
                     .ThenInclude(i => i.Author)
+                    .Include(i => i.BookRental)
                     .Select(x => x.MapBookToBookDto())
                     .ToList();
             }
@@ -149,6 +151,7 @@ namespace ServiceLayer.BookServices
                 return dbContext.Books
                     .Include(i => i.AuthorsLink)
                     .ThenInclude(i => i.Author)
+                    .Include(i => i.BookRental)
                     .Single(b => b.BookId == bookId)
                     .MapBookToBookDto();
             }
