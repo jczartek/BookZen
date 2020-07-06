@@ -1,6 +1,7 @@
 ﻿using DataLayer;
 using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using RepositoryLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,30 +119,19 @@ namespace ServiceLayer.BookServices
 
         public static List<BookDto> GetAllBooks()
         {
-            using (var dbContext = DbCoreContextFactory.Create())
-            {
-                return dbContext.Books
-                    .AsNoTracking()
-                    .Include(i => i.AuthorsLink)
-                    .ThenInclude(i => i.Author)
-                    .Include(i => i.BookRental)
-                    .Select(x => x.MapBookToBookDto())
-                    .ToList();
-            }
+            return RepositoryFactory
+                .CreateBookRepository()
+                .GetAll()
+                .Select(x => x.MapBookToBookDto())
+                .ToList();
         }
 
         public static void DeleteBook(int bookId)
         {
-            using (var dbContext = DbCoreContextFactory.Create())
-            {
-                Book book = dbContext.Books.Find(bookId);
+            var repository = RepositoryFactory.CreateBookRepository();
+            var book = repository.GetById(bookId);
 
-                if (book != null)
-                {
-                    dbContext.Books.Remove(book);
-                    dbContext.SaveChanges();
-                }
-            }
+            if (book != null) repository.Delete(book);
         }
 
         public static BookDto FindBookById(int bookId)
