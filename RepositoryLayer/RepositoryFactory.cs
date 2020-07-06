@@ -20,7 +20,7 @@ namespace RepositoryLayer
 
         public static IBookRentalRepository CreateBookRentalRepository()
         {
-            return new BookRentalRepository();
+            return new BookRentaRepository();
         }
     }
 }

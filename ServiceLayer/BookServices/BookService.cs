@@ -82,39 +82,23 @@ namespace ServiceLayer.BookServices
 
         public BookDto SaveToDatabase()
         {
-            using (var dbContext = DbCoreContextFactory.Create())
-            {
-                
-                var book = BookDto.MapBookDtoToBook();
-                if (book.BookId == default) dbContext.Add(book);
-                else dbContext.Update(book);
-                dbContext.SaveChanges();
+            var book = BookDto.MapBookDtoToBook();
+            if (book.BookId == default) AddBook(BookDto);
+            else UpdateBook(BookDto);
 
-                BookDto.BookId = book.BookId;
-                return BookDto;
-            }
+            return BookDto;
         }
 
         public static BookDto FindBookByIsbn(string isbn)
         {
-            using (var dbContext = DbCoreContextFactory.Create())
-            {
-                try
-                {
-                    var dto =  dbContext.Books
-                        .Include(b => b.AuthorsLink)
-                            .ThenInclude(aL => aL.Author)
-                        .Include(b => b.BookRental)
-                        .Single(b => b.Isbn == isbn)
-                        .MapBookToBookDto();
+            var book = RepositoryFactory
+                .CreateBookRepository()
+                .GetBookByIsbn(isbn);
 
-                    return dto;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
+            if (book != null)
+                return book.MapBookToBookDto();
+
+            return null;
         }
 
         public static List<BookDto> GetAllBooks()
@@ -136,27 +120,36 @@ namespace ServiceLayer.BookServices
 
         public static BookDto FindBookById(int bookId)
         {
-            using (var dbContext = DbCoreContextFactory.Create())
-            {
-                return dbContext.Books
-                    .Include(i => i.AuthorsLink)
-                    .ThenInclude(i => i.Author)
-                    .Include(i => i.BookRental)
-                    .Single(b => b.BookId == bookId)
-                    .MapBookToBookDto();
-            }
+            var book = RepositoryFactory
+                .CreateBookRepository()
+                .GetById(bookId);
+
+            if (book != null)
+                return book.MapBookToBookDto();
+
+            return null;
         }
 
         public static void UpdateBook(BookDto dto)
         {
             if (dto != null)
             {
-                using (var dbContext = DbCoreContextFactory.Create())
-                {
-                    var book = dto.MapBookDtoToBook();
-                    dbContext.Update(book);
-                    dbContext.SaveChanges();
-                }
+                var book = dto.MapBookDtoToBook();
+                RepositoryFactory
+                    .CreateBookRepository()
+                    .Update(book);
+            }
+        }
+
+        public static void AddBook(BookDto dto)
+        {
+            if (dto != null)
+            {
+                var book = dto.MapBookDtoToBook();
+                RepositoryFactory
+                    .CreateBookRepository()
+                    .Add(book);
+                dto.BookId = book.BookId;
             }
         }
 

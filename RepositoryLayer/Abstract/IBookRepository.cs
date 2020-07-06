@@ -7,5 +7,6 @@ namespace RepositoryLayer.Abstract
 {
     public interface IBookRepository : IRepository<Book>
     {
+        Book GetBookByIsbn(string isbn);
     }
 }

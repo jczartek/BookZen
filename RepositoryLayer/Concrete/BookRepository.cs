@@ -32,6 +32,15 @@ namespace RepositoryLayer.Concrete
                       .ToList();
         }
 
+        public Book GetBookByIsbn(string isbn)
+        {
+            return ctx.Books
+                .Include(x => x.AuthorsLink)
+                .ThenInclude(x => x.Author)
+                .Include(x => x.BookRental)
+                .SingleOrDefault(x => x.Isbn == isbn);
+        }
+
         public Book GetById(int id)
         {
             return ctx.Books

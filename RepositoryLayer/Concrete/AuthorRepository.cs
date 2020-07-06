@@ -1,7 +1,9 @@
 ﻿using DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RepositoryLayer.Concrete
@@ -10,27 +12,36 @@ namespace RepositoryLayer.Concrete
     {
         public void Add(Author entity)
         {
-            throw new NotImplementedException();
+            ctx.Add(entity);
+            ctx.SaveChanges();
         }
 
         public void Delete(Author entity)
         {
-            throw new NotImplementedException();
+            ctx.Remove(entity);
+            ctx.SaveChanges();
         }
 
         public List<Author> GetAll()
         {
-            throw new NotImplementedException();
+            return ctx.Authors
+                .Include(x => x.BooksLink)
+                .ThenInclude(x => x.Book)
+                .ToList();
         }
 
         public Author GetById(int id)
         {
-            throw new NotImplementedException();
+            return ctx.Authors
+                .Include(x => x.BooksLink)
+                .ThenInclude(x => x.Book)
+                .Single(x => x.AuthorId == id);
         }
 
         public void Update(Author entity)
         {
-            throw new NotImplementedException();
+            ctx.Update(entity);
+            ctx.SaveChanges();
         }
     }
 }
