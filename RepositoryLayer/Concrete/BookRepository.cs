@@ -26,6 +26,7 @@ namespace RepositoryLayer.Concrete
         public List<Book> GetAll()
         {
             return ctx.Books
+                      .AsNoTracking()
                       .Include(x => x.AuthorsLink)
                           .ThenInclude(x => x.Author)
                       .Include(x => x.BookRental)
@@ -35,6 +36,7 @@ namespace RepositoryLayer.Concrete
         public Book GetBookByIsbn(string isbn)
         {
             return ctx.Books
+                .AsNoTracking()
                 .Include(x => x.AuthorsLink)
                 .ThenInclude(x => x.Author)
                 .Include(x => x.BookRental)
@@ -44,16 +46,17 @@ namespace RepositoryLayer.Concrete
         public Book GetById(int id)
         {
             return ctx.Books
-                      .Include(x => x.AuthorsLink)
-                          .ThenInclude(x => x.Author)
-                      .Include(x => x.BookRental)
-                      .SingleOrDefault(x => x.BookId == id);
+                .AsNoTracking()
+                .Include(x => x.AuthorsLink)
+                .ThenInclude(x => x.Author)
+                .Include(x => x.BookRental)
+                .SingleOrDefault(x => x.BookId == id);
         }
 
         public void Update(Book entity)
         {
             ctx.Update(entity);
             ctx.SaveChanges();
-        }
+        } 
     }
 }

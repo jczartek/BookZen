@@ -1,5 +1,6 @@
 ﻿using BookZen.Dialogs;
 using DataLayer.Entities;
+using ServiceLayer;
 using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,12 @@ namespace BookZen.ViewModels
     {
         public List<BookDto> Books
         {
-            get => BookService.GetAllBooks();
+            get
+            {
+                return ServiceFactory
+                    .CreateBookService()
+                    .GetAllBooks();
+            }
         }
 
         private bool editMode;

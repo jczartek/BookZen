@@ -1,11 +1,7 @@
-﻿using DataLayer;
-using DataLayer.Entities;
-using Microsoft.EntityFrameworkCore;
-using RepositoryLayer;
+﻿using RepositoryLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ServiceLayer.BookServices
 {

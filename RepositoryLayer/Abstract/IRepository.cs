@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RepositoryLayer.Abstract
 {
-    public interface IRepository<TEntity>
+    public interface IRepository<TEntity> : IDisposable
     {
         TEntity GetById(int id);
         List<TEntity> GetAll();

@@ -1,13 +1,14 @@
 ﻿using DataLayer;
 using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServiceLayer.BookServices
+namespace ServiceLayer
 {
-    static class BookServiceExtension
+    public static class MapBookHelper
     {
         public static BookDto MapBookToBookDto(this Book book)
         {

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:BookZen"
         xmlns:mv="clr-namespace:BookZen.ViewModels"
         xmlns:conv="clr-namespace:BookZen.Converters"
@@ -124,7 +125,8 @@
                             <Button Content="Details"
                                     Style="{StaticResource BtnPrimaryStyle}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.ShowDetailsCommand}"
-                                    CommandParameter="{Binding BookId}"/>
+                                    CommandParameter="{Binding BookId}"
+                                    Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.EditMode, Converter={StaticResource BoolToVisibility} }"/>
                             <Button Content="Update"
                                     Style="{StaticResource BtnPrimaryStyle}"
                                     Margin="10, 0"
@@ -137,6 +139,13 @@
                                     CommandParameter="{Binding BookId}"
                                     Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.EditMode, Converter={StaticResource BoolToVisibility} }"/>
                         </StackPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick" SourceObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}">
+                                <i:InvokeCommandAction
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.ShowDetailsCommand}"
+                                    CommandParameter="{Binding BookId}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

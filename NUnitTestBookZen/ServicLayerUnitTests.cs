@@ -1,5 +1,5 @@
-using DataLayer.Entities;
 using NUnit.Framework;
+using ServiceLayer;
 using ServiceLayer.BookServices;
 using System;
 
@@ -87,13 +87,19 @@ namespace NUnitTestBookZen
         [Test]
         public void TestBookRental()
         {
-            var dto = BookService.Init()
+
+            var dto = ServiceFactory.CreateBookService(service =>
+            {
+                var dto = BookDtoFluent
+                .Create()
                 .Title("Po¿yczona ksi¹¿ka")
                 .Authors("Kowalski Jan")
-                .IsBookOnLoan(true, x => { x.IsOnLoan = true; x.NameOfBorrower = "Kowalski Micha³"; x.DateBorrowing = DateTime.Now; })
-                .SaveToDatabase();
+                .BookIsOnLoan().By("Kowalski Micha³").In(DateTime.Now)
+                .Get();
 
-            dto = BookService.FindBookById(dto.BookId);
+                service.AddBook(dto);
+                return dto;
+            });
 
             Assert.IsTrue(dto.IsOnLoan);
             Assert.AreEqual("Kowalski Micha³", dto.NameOfBorrower);
@@ -101,22 +107,32 @@ namespace NUnitTestBookZen
             Assert.AreEqual(DateTime.Now.Month, dto.DateBorrowing.Month);
             Assert.AreEqual(DateTime.Now.Year, dto.DateBorrowing.Year);
 
-            dto.NameOfBorrower = "Kowalska Ewa";
-            dto.DateBorrowing = new DateTime(2019, 01, 01);
-            BookService.UpdateBook(dto);
+            dto = ServiceFactory.CreateBookService((service, id) =>
+            {
+                var bookDto = service.GetBookById(id);
+                bookDto.NameOfBorrower = "Kowalska Ewa";
+                bookDto.DateBorrowing = new DateTime(2019, 01, 01);
 
-            dto = BookService.FindBookById(dto.BookId);
+                service.UpdateBook(bookDto);
+                return service.GetBookById(id);
+            }, dto.BookId);
+
             Assert.IsTrue(dto.IsOnLoan);
             Assert.AreEqual("Kowalska Ewa", dto.NameOfBorrower);
             Assert.AreEqual(new DateTime(2019, 01, 01), dto.DateBorrowing);
 
-            dto.IsOnLoan = false;
-            BookService.UpdateBook(dto);
+            dto = ServiceFactory.CreateBookService((service, id) =>
+            {
+                var bookDto = service.GetBookById(id);
+                bookDto.IsOnLoan = false;
 
-            dto = BookService.FindBookById(dto.BookId);
+                service.UpdateBook(bookDto);
+                return service.GetBookById(id);
+            }, dto.BookId);
+
             Assert.IsFalse(dto.IsOnLoan);
 
-            BookService.DeleteBook(dto.BookId);
+            ServiceFactory.CreateBookService((service, id) => { service.DeleteBookById(id); }, dto.BookId);
         }
     }
 }

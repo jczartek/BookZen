@@ -1,5 +1,6 @@
 ﻿using BookZen.Dialogs;
 using DataLayer.Entities;
+using ServiceLayer;
 using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
