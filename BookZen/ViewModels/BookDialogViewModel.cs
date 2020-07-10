@@ -1,11 +1,5 @@
 ﻿using BookZen.Dialogs;
-using DataLayer.Entities;
 using ServiceLayer;
-using ServiceLayer.BookServices;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
 
 namespace BookZen.ViewModels
@@ -23,7 +17,10 @@ namespace BookZen.ViewModels
                 {
                     if (o is InputBookDialog dialog)
                     {
-                        BookService.Init()
+                        ServiceFactory.CreateBookService(service =>
+                        {
+                            var dto = BookDtoFluent
+                            .Create()
                             .Id(BookId)
                             .Title(Title)
                             .Authors(Authors)
@@ -31,9 +28,13 @@ namespace BookZen.ViewModels
                             .Publisher(Publisher)
                             .Isbn(Isbn)
                             .YearOfPublication(YearOfPublication)
-                            .IsBookRead(IsRead, (dto) => { dto.IsRead = IsRead; dto.ReadDate = ReadDate; })
-                            .IsBookOnLoan(IsOnLoan, (dto) => { dto.IsOnLoan = IsOnLoan; dto.NameOfBorrower = NameOfBorrower; dto.DateBorrowing = DateBorrowing; })
-                            .SaveToDatabase();
+                            .BookIsRead(IsRead).When(ReadDate)
+                            .BookIsOnLoan(IsOnLoan).By(NameOfBorrower).In(DateBorrowing)
+                            .Get();
+
+                            if (BookId == 0) service.AddBook(dto);
+                            else service.UpdateBook(dto);
+                        });
 
                         dialog.DialogResult = true;
                         dialog.Close();

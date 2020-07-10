@@ -1,8 +1,5 @@
 ﻿using ServiceLayer;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Text;
 
 namespace BookZen.ViewModels
 {

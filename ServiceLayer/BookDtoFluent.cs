@@ -91,7 +91,7 @@ namespace ServiceLayer
             return this;
         }
 
-        public BookDtoFluent When(DateTime readDate)
+        public BookDtoFluent When(DateTime? readDate)
         {
             dto.ReadDate = readDate;
             return this;
