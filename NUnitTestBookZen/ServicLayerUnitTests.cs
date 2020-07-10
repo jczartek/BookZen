@@ -1,3 +1,4 @@
+using DataLayer.Entities;
 using NUnit.Framework;
 using ServiceLayer;
 using ServiceLayer.BookServices;
@@ -13,75 +14,69 @@ namespace NUnitTestBookZen
         }
 
         [Test]
-        public void AddNewBookWithOneAuthorTest()
+        public void TestAddBook()
         {
-
-            var dto = BookService.FindBookByIsbn("978-83-283-2547-0");
-
-            if (dto == null)
+            var dto = ServiceFactory.CreateBookService(service =>
             {
-                dto = BookService.Init()
-                         .Title("DDD dla architektów oprogramowania")
-                         .Authors("Vaughn Vernon")
-                         .Publisher("Helion")
-                         .Isbn("978-83-283-2547-0")
-                         .Description("Niniejsza ksi¹¿ka jest przeznaczona dla architektów aplikacji skali korporacyjnej. Zawarto w niej wyczerpuj¹cy opis narzêdzie DDD.")
-                         .YearOfPublication(2016)
-                         .SaveToDatabase();
-            }
+                var bookDto = service.GetBookByIsbn("978-83-283-2547-0");
 
+                if (bookDto != null)
+                {
+                    bookDto =
+                    BookDtoFluent.Create()
+                    .Title("DDD dla architektów oprogramowania")
+                    .Authors("Vaughn Vernon")
+                    .Publisher("Helion")
+                    .Isbn("978-83-283-2547-0")
+                    .Description("Niniejsza ksi¹¿ka jest przeznaczona dla architektów aplikacji skali korporacyjnej. Zawarto w niej wyczerpuj¹cy opis narzêdzie DDD.")
+                    .YearOfPublication(2016)
+                    .Get();
+                }
+                service.AddBook(bookDto);
+                return bookDto;
+            });
             Assert.AreEqual(dto.Title, "DDD dla architektów oprogramowania");
             Assert.AreEqual(dto.Authors, "Vaughn Vernon");
-
-            dto = BookService.FindBookByIsbn("978-83-283-4279-8");
-
-            if (dto == null)
-            {
-                dto = BookService.Init()
-                         .Title("DDD. Kompendium wiedzy")
-                         .Authors("Vaughn Vernon")
-                         .Publisher("Helion")
-                         .Isbn("978-83-283-4279-8")
-                         .YearOfPublication(2018)
-                         .Description("To zwiêz³y i czytelnie napisany podrêcznik, który jest przeznaczony dla programistów.")
-                         .SaveToDatabase();
-            }
-
-            Assert.AreEqual(dto.Title, "DDD. Kompendium wiedzy");
-            Assert.AreEqual(dto.Authors, "Vaughn Vernon");
+            ServiceFactory.CreateBookService((service, id) => { service.DeleteBookById(id); }, dto.BookId);
         }
 
         [Test]
-        public void UpdateBook()
+        public void TestUpdateBook()
         {
-            var dto = BookService.Init()
-                 .Title("Ksi¹¿ka do aktualizacji")
-                 .Authors("Nieznani")
-                 .SaveToDatabase();
+            var dto = ServiceFactory.CreateBookService(service =>
+            {
+                var bookDto = BookDtoFluent
+                .Create()
+                .Title("Ksi¹¿ka do aktualizacji")
+                .Authors("Nieznani")
+                .Get();
 
+                service.AddBook(bookDto);
+                return bookDto;
+            });
             Assert.Greater(dto.BookId, 0);
 
-            int bookId = dto.BookId;
-            dto.Title = "Tytu³ Siê zmieni³";
+            dto = ServiceFactory.CreateBookService((service, id) =>
+            {
+                var bookDto = service.GetBookById(id);
+                bookDto.Title = "Tytu³ Siê zmieni³";
 
-            BookService.UpdateBook(dto);
-
-            dto = BookService.FindBookById(bookId);
-
+                service.UpdateBook(bookDto);
+                return bookDto;
+            }, dto.BookId);
             Assert.AreEqual("Tytu³ Siê zmieni³", dto.Title);
 
-            dto.Authors = "Kowalski Jan, Kowalski Micha³";
+            dto = ServiceFactory.CreateBookService((service, id) =>
+            {
+                var bookDto = service.GetBookById(id);
+                bookDto.Authors = "Kowalski Jan, Kowalski Micha³";
 
-            BookService.UpdateBook(dto);
-
-            dto = BookService.FindBookById(bookId);
-
+                service.UpdateBook(bookDto);
+                return bookDto;
+            }, dto.BookId);
             Assert.AreEqual("Kowalski Jan, Kowalski Micha³", dto.Authors);
 
-            dto = BookService.FindBookById(bookId);
-
-            BookService.DeleteBook(dto.BookId);
-
+            ServiceFactory.CreateBookService((service, id) => { service.DeleteBookById(id); }, dto.BookId);
         }
 
         [Test]
@@ -94,7 +89,7 @@ namespace NUnitTestBookZen
                 .Create()
                 .Title("Po¿yczona ksi¹¿ka")
                 .Authors("Kowalski Jan")
-                .BookIsOnLoan().By("Kowalski Micha³").In(DateTime.Now)
+                .BookIsOnLoan().By("Kowalski Micha³").In(new DateTime(2020, 12, 01))
                 .Get();
 
                 service.AddBook(dto);
@@ -103,9 +98,7 @@ namespace NUnitTestBookZen
 
             Assert.IsTrue(dto.IsOnLoan);
             Assert.AreEqual("Kowalski Micha³", dto.NameOfBorrower);
-            Assert.AreEqual(DateTime.Now.Day, dto.DateBorrowing.Day);
-            Assert.AreEqual(DateTime.Now.Month, dto.DateBorrowing.Month);
-            Assert.AreEqual(DateTime.Now.Year, dto.DateBorrowing.Year);
+            Assert.AreEqual(new DateTime(2020, 12, 01), dto.DateBorrowing);
 
             dto = ServiceFactory.CreateBookService((service, id) =>
             {

@@ -1,10 +1,6 @@
 ﻿using BookZen.Dialogs;
-using DataLayer.Entities;
 using ServiceLayer;
-using ServiceLayer.BookServices;
-using System;
 using System.Collections.Generic;
-using System.Printing;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,12 +10,7 @@ namespace BookZen.ViewModels
     {
         public List<BookDto> Books
         {
-            get
-            {
-                return ServiceFactory
-                    .CreateBookService()
-                    .GetAllBooks();
-            }
+            get => ServiceFactory.CreateBookService(service => { return service.GetAllBooks(); });
         }
 
         private bool editMode;
@@ -66,7 +57,8 @@ namespace BookZen.ViewModels
                 return showDetailsCommand ??= new RelayCommand(
                     (parameter) =>
                     {
-                        new DetailsBookDialog(BookService.FindBookById((int)parameter)).ShowDialog();
+                        var bookDto = ServiceFactory.CreateBookService((service, id) => service.GetBookById(id), (int)parameter);
+                        new DetailsBookDialog(bookDto).ShowDialog();
                     });
             }
         }
@@ -79,7 +71,8 @@ namespace BookZen.ViewModels
                 return updateBookCommand ??= new RelayCommand(
                     (parameter) =>
                     {
-                        new InputBookDialog(BookService.FindBookById((int)parameter)).ShowDialog();
+                        var bookDto = ServiceFactory.CreateBookService((service, id) => service.GetBookById(id), (int)parameter);
+                        new InputBookDialog(bookDto).ShowDialog();
                         RaisePropertiesChanged(nameof(Books));
                     });
             }
@@ -101,7 +94,7 @@ namespace BookZen.ViewModels
                         switch(result)
                         {
                             case MessageBoxResult.Yes:
-                                BookService.DeleteBook((int)parameter);
+                                ServiceFactory.CreateBookService((service, id) => service.DeleteBookById(id), (int)parameter);
                                 RaisePropertiesChanged(nameof(Books));
                                 break;
                             case MessageBoxResult.No:
