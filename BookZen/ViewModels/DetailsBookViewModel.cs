@@ -2,50 +2,16 @@
 
 namespace BookZen.ViewModels
 {
-    class DetailsBookViewModel : ViewModelBase
+    class DetailsBookViewModel : BaseBookViewModel
     {
-        private BookDto BookDto;
-        public DetailsBookViewModel(BookDto bookDto)
-        {
-            BookDto = bookDto;
-        }
-
-        public string Title
-        {
-            get => "Title: " + BookDto.Title;
-        }
-
-        public string Authors
-        {
-            get => "Authors: " + BookDto.Authors;
-        }
-
-        public string Publisher
-        {
-            get => "Publisher: " + BookDto.Publisher ?? "N/A";
-        }
-
-        public string Isbn
-        {
-            get => "Isbn: " + BookDto.Isbn ?? "N/A";
-        }
-
-        public string Description
-        {
-            get => "Descripton: " + BookDto.Description ?? "N/A";
-        }
-
-        public string YearOfPublication
-        {
-            get => "Year of publication: " + BookDto.YearOfPublication.ToString();
-        }
+        public DetailsBookViewModel(BookDto bookDto) : base(bookDto) { }
 
         public string ReadBook
         {
             get
             {
-                var date = BookDto.ReadDate.HasValue ? BookDto.ReadDate.Value.ToString("dd-MM-yyyy") : null;
-                var message = BookDto.IsRead
+                var date = ReadDate.HasValue ? ReadDate.Value.ToString("dd-MM-yyyy") : null;
+                var message = IsRead
                     ? $"Book was read on {date}."
                     : "The book has not been read yet.";
                 return message;
@@ -56,8 +22,8 @@ namespace BookZen.ViewModels
         {
             get
             {
-                var message = BookDto.IsOnLoan
-                    ? $"The book was borrowed by {BookDto.NameOfBorrower} on {BookDto.DateBorrowing}."
+                var message = IsOnLoan
+                    ? $"The book was borrowed by {NameOfBorrower} on {DateBorrowing}."
                     : "The book is not borrowed.";
                 return message;
             }

@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:BookZen.Converters"
         xmlns:local="clr-namespace:BookZen.Dialogs"
         mc:Ignorable="d"
         Title="Information about book"
         SizeToContent="Height"
         Width="600">
     <Window.Resources>
+        <conv:NullToStringConverter x:Key="NullToString" />
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Padding" Value="5" />
@@ -26,12 +28,24 @@
                       VerticalScrollBarVisibility="Auto"
                       Height="300">
             <StackPanel Margin="10,10,2,0">
-                <TextBlock Text="{Binding Title}"/>
-                <TextBlock Text="{Binding Authors}"/>
-                <TextBlock Text="{Binding Publisher}"/>
-                <TextBlock Text="{Binding Isbn}"/>
-                <TextBlock Text="{Binding YearOfPublication}"/>
-                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                <TextBlock>
+                    Title: <Run Text="{Binding Title, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
+                    Authors: <Run Text="{Binding Authors, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
+                    Publisher: <Run Text="{Binding Publisher, Mode=OneWay, Converter={StaticResource NullToString}}" />
+                </TextBlock>
+                <TextBlock>
+                    Isbn: <Run Text="{Binding Isbn, Mode=OneWay, Converter={StaticResource NullToString}}" />
+                </TextBlock>
+                <TextBlock>
+                    Year of publication: <Run Text="{Binding YearOfPublication, Mode=OneWay, Converter={StaticResource NullToString}}" />
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    Description: <Run Text="{Binding Description, Mode=OneWay, Converter={StaticResource NullToString}}" />
+                </TextBlock>
                 <TextBlock Text="{Binding ReadBook}" />
                 <TextBlock Text="{Binding Loan}" />
             </StackPanel>
