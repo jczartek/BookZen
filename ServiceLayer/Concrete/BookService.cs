@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ServiceLayer.Concrete
 {
-    internal class BookService : BaseService<Book>, IBookService
+    public class BookService : BaseService<Book>, IBookService
     {
         public BookService(IRepository<Book> repository) : base(repository) { }
         

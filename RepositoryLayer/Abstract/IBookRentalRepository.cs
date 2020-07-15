@@ -7,5 +7,6 @@ namespace RepositoryLayer.Abstract
 {
     public interface IBookRentalRepository : IRepository<BookRental>
     {
+        BookRental GetByBookId(int bookId);
     }
 }

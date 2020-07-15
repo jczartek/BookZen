@@ -1,8 +1,5 @@
 ﻿using RepositoryLayer.Abstract;
 using RepositoryLayer.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RepositoryLayer
 {

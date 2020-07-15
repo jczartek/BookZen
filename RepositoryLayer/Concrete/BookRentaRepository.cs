@@ -27,10 +27,16 @@ namespace RepositoryLayer.Concrete
                 .ToList();
         }
 
+        public BookRental GetByBookId(int bookId)
+        {
+            return ctx.BookRentals
+                .SingleOrDefault(x => x.BookId == bookId);
+        }
+
         public BookRental GetById(int id)
         {
             return ctx.BookRentals
-                .Single(x => x.BookRentalId == id);
+                .SingleOrDefault(x => x.BookRentalId == id);
         }
 
         public void Update(BookRental entity)

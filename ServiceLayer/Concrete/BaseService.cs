@@ -1,11 +1,9 @@
 ﻿using RepositoryLayer.Abstract;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ServiceLayer.Concrete
 {
-     internal class BaseService<TEntity> : IDisposable
+    public class BaseService<TEntity> : IDisposable
     {
         protected IRepository<TEntity> Repository { get; set; }
 
