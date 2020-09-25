@@ -10,32 +10,6 @@ namespace ServiceLayer
 {
     public static class MapBookHelper
     {
-        public static BookDto MapBookToBookDto(this Book book)
-        {
-            var bookDto = new BookDto()
-            {
-                BookId = book.BookId,
-                Title = book.Title,
-                Description = book.Description,
-                YearOfPublication = book.YearOfPublication,
-                Publisher = book.Publisher,
-                Isbn = book.Isbn,
-                IsRead = book.IsRead,
-                ReadDate = book.ReadDate,
-                Authors = string.Join(", ",
-                book.AuthorsLink
-                  .Select(q => q.Author.Name)),
-                IsOnLoan = book.BookRental != null
-            };
-
-            if (bookDto.IsOnLoan)
-            {
-                bookDto.NameOfBorrower = book.BookRental.Name;
-                bookDto.DateBorrowing = book.BookRental.DateBorrowing;
-            }
-
-            return bookDto;
-        }
 
         private static BookAuthor GetBookAuthorById(int bookId, int authorId)
         {

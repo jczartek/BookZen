@@ -31,7 +31,7 @@ namespace ServiceLayer.Concrete
         {
             return Repository
                 .GetAll()
-                .Select(x => x.MapBookToBookDto())
+                .Select(x => Mapping.Mapper().Map<BookDto>(x))
                 .ToList();
         }
 
@@ -40,7 +40,7 @@ namespace ServiceLayer.Concrete
             var book = Repository.GetById(id);
 
             if (book != null)
-                return book.MapBookToBookDto();
+                return Mapping.Mapper().Map<BookDto>(book);
 
             return null;
         }
@@ -50,7 +50,7 @@ namespace ServiceLayer.Concrete
             var book = (Repository as IBookRepository).GetBookByIsbn(isbn);
 
             if (book != null)
-                return book.MapBookToBookDto();
+                return Mapping.Mapper().Map<BookDto>(book);
 
             return null;
         }

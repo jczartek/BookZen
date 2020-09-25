@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceLayer;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,10 @@ namespace BookZen
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Mapping.Init();
+            base.OnStartup(e);
+        }
     }
 }

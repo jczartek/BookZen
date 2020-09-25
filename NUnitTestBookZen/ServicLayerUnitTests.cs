@@ -6,11 +6,13 @@ using System;
 
 namespace NUnitTestBookZen
 {
+    
     public class BookServiceTest
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
+            Mapping.Init();
         }
 
         [Test]
