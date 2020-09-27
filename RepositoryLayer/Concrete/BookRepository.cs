@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace RepositoryLayer.Concrete
@@ -20,6 +21,30 @@ namespace RepositoryLayer.Concrete
         public void Delete(Book entity)
         {
             ctx.Remove(entity);
+            ctx.SaveChanges();
+        }
+
+        public void DeleteAllBookAuthorsByBookId(int bookId)
+        {
+            var bookAuthors = ctx.Books.Include(i => i.AuthorsLink)
+                .Single(x => x.BookId == bookId)
+                .AuthorsLink;
+
+            if (bookAuthors == null) return;
+
+            ctx.RemoveRange(bookAuthors);
+            ctx.SaveChanges();
+        }
+
+        public void DeleteBookRentalByBookId(int bookId)
+        {
+            var bookRental = ctx.Books.Include(i => i.BookRental)
+                .Single(x => x.BookId == bookId)
+                .BookRental;
+
+            if (bookRental == null) return;
+
+            ctx.Remove(bookRental);
             ctx.SaveChanges();
         }
 

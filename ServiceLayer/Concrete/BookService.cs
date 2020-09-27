@@ -14,7 +14,7 @@ namespace ServiceLayer.Concrete
         {
             if (dto != null)
             {
-                var book = dto.MapBookDtoToBook();
+                var book = Mapping.Mapper().Map<Book>(dto);
                 Repository.Add(book);
                 dto.BookId = book.BookId;
             }
@@ -59,7 +59,7 @@ namespace ServiceLayer.Concrete
         {
             if (dto != null)
             {
-                var book = dto.MapBookDtoToBook();
+                var book = Mapping.Mapper().Map<Book>(dto);
                 Repository.Update(book);
             }
         }
