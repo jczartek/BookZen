@@ -22,6 +22,11 @@ namespace RepositoryLayer.Concrete
             ctx.SaveChanges();
         }
 
+        public Author FindAuthorByName(string name)
+        {
+            return ctx.Authors.SingleOrDefault(a => a.Name == name);
+        }
+
         public List<Author> GetAll()
         {
             return ctx.Authors

@@ -7,5 +7,6 @@ namespace RepositoryLayer.Abstract
 {
     public interface IAuthorRepository : IRepository<Author>
     {
+        Author FindAuthorByName(string name);
     }
 }

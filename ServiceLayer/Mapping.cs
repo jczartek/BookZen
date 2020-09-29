@@ -2,17 +2,16 @@
 using DataLayer.Entities;
 using RepositoryLayer.Abstract;
 using RepositoryLayer.Concrete;
-using ServiceLayer.BookServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ServiceLayer
 {
     public static class Mapping
     {
         private static readonly IBookRepository bookRepository = new BookRepository();
+        private static readonly IAuthorRepository authorRepository = new AuthorRepository();
         private static MapperConfiguration mapperConfiguration = null;
         private static Mapper mapper = null;
         public static void Init()
@@ -53,7 +52,7 @@ namespace ServiceLayer
 
             foreach (var athr in source.Authors.Split(','))
             {
-                var author = AuthorService.FindAuthorByName(athr.Trim());
+                var author = authorRepository.FindAuthorByName(athr.Trim());
 
                 var bookAuthor = new BookAuthor() { BookId = source.BookId };
 
