@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLaye
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NUnitTestBookZen", "NUnitTestBookZen\NUnitTestBookZen.csproj", "{06ECD22F-B4BE-47BC-B553-A6C1F9126973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{D4E6B42E-C281-48F8-A8FF-40E002284039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryLayer", "RepositoryLayer\RepositoryLayer.csproj", "{D4E6B42E-C281-48F8-A8FF-40E002284039}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

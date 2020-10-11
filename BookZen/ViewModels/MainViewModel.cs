@@ -1,5 +1,7 @@
 ﻿using BookZen.Dialogs;
+using Microsoft.Win32;
 using ServiceLayer;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -99,6 +101,29 @@ namespace BookZen.ViewModels
                                 break;
                             case MessageBoxResult.No:
                                 break;
+                        }
+                    });
+            }
+        }
+
+        private ICommand exportBooks;
+        public ICommand ExportBooks
+        {
+            get
+            {
+                return exportBooks ??= new RelayCommand(
+                    (_) =>
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog
+                        {
+                            FileName = $"{DateTime.Now.ToString("yyyyMMddHHmmssffff")}-bookzen-backup",
+                            DefaultExt = "json",
+                            Filter = "Json files (*.json)|*.json|All files (*.*)|*.*",
+                            Title = "Export books..."
+                        };
+                        if (saveFileDialog.ShowDialog().Value)
+                        {
+
                         }
                     });
             }

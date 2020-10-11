@@ -27,12 +27,12 @@ namespace ServiceLayer
             {
                 _ = cfg.CreateMap<Book, BookDto>()
                 .ForMember(d => d.Authors, ops => ops.MapFrom(s => string.Join(",", s.AuthorsLink.Select(a => a.Author.Name))))
-                .ForMember(d => d.IsOnLoan, ops => ops.MapFrom(s => s.BookRental != null))
-                .ForMember(d => d.NameOfBorrower, ops => ops.MapFrom(s => s.BookRental != null ? s.BookRental.Name : default))
-                .ForMember(d => d.DateBorrowing, ops => ops.MapFrom(s => s.BookRental != null ? s.BookRental.DateBorrowing : default))
+                .ForMember(d => d.IsOnLoan, ops => ops.MapFrom(s => s.Borrower != null))
+                .ForMember(d => d.NameOfBorrower, ops => ops.MapFrom(s => s.Borrower != null ? s.Borrower.Name : default))
+                .ForMember(d => d.DateBorrowing, ops => ops.MapFrom(s => s.Borrower != null ? s.Borrower.DateBorrowing : default))
                 .ReverseMap()
                 .ForPath(d => d.AuthorsLink, ops => ops.MapFrom(src => MapBookAutor(src)))
-                .ForPath(d => d.BookRental, ops => ops.MapFrom(src => MapBookRental(src)));
+                .ForPath(d => d.Borrower, ops => ops.MapFrom(src => MapBookRental(src)));
             });
         }
 
@@ -53,8 +53,11 @@ namespace ServiceLayer
             foreach (var athr in source.Authors.Split(','))
             {
                 var author = authorRepository.FindAuthorByName(athr.Trim());
+                var book = bookRepository.GetById(source.BookId);
 
-                var bookAuthor = new BookAuthor() { BookId = source.BookId };
+                var bookAuthor = new BookAuthor() {};
+
+                if (book != null) bookAuthor.Book = book;
 
                 if (author != null) bookAuthor.AuthorId = author.AuthorId;
                 else bookAuthor.Author = new Author { Name = athr.Trim() };
@@ -64,16 +67,16 @@ namespace ServiceLayer
             return bookAuthors;
         }
 
-        private static BookRental MapBookRental(BookDto source)
+        private static Borrower MapBookRental(BookDto source)
         {
             if (source.BookId > 0)
                 bookRepository.DeleteBookRentalByBookId(source.BookId);
 
             if (!source.IsOnLoan) return null;
            
-            return new BookRental()
+            return new Borrower()
             {
-               BookId = source.BookId,
+               //BookId = source.BookId,
                DateBorrowing = source.DateBorrowing,
                Name = source.NameOfBorrower
             };

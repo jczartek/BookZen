@@ -2,6 +2,7 @@
 using RepositoryLayer.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -9,37 +10,36 @@ namespace RepositoryLayer.Concrete
 {
     public class BookRentaRepository : Repository, IBookRentalRepository
     {
-        public void Add(BookRental entity)
+        public void Add(Borrower entity)
         {
             ctx.Add(entity);
             ctx.SaveChanges();
         }
 
-        public void Delete(BookRental entity)
+        public void Delete(Borrower entity)
         {
             ctx.Remove(entity);
             ctx.SaveChanges();
         }
 
-        public List<BookRental> GetAll()
+        public List<Borrower> GetAll()
         {
-            return ctx.BookRentals
+            return ctx.Borrowers
                 .ToList();
         }
 
-        public BookRental GetByBookId(int bookId)
+        public Borrower GetByBookId(int bookId)
         {
-            return ctx.BookRentals
-                .SingleOrDefault(x => x.BookId == bookId);
+            throw new NotImplementedException();
         }
 
-        public BookRental GetById(int id)
+        public Borrower GetById(int id)
         {
-            return ctx.BookRentals
-                .SingleOrDefault(x => x.BookRentalId == id);
+            return ctx.Borrowers
+                .SingleOrDefault(x => x.BorrowerId == id);
         }
 
-        public void Update(BookRental entity)
+        public void Update(Borrower entity)
         {
             ctx.Update(entity);
             ctx.SaveChanges();

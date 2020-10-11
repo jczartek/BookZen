@@ -42,11 +42,11 @@ namespace DataLayer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("BorrowerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Isbn")
                         .HasColumnType("nvarchar(max)");
@@ -66,6 +66,8 @@ namespace DataLayer.Migrations
 
                     b.HasKey("BookId");
 
+                    b.HasIndex("BorrowerId");
+
                     b.ToTable("Books");
                 });
 
@@ -84,28 +86,30 @@ namespace DataLayer.Migrations
                     b.ToTable("BookAuthor");
                 });
 
-            modelBuilder.Entity("DataLayer.Entities.BookRental", b =>
+            modelBuilder.Entity("DataLayer.Entities.Borrower", b =>
                 {
-                    b.Property<int>("BookRentalId")
+                    b.Property<int>("BorrowerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateBorrowing")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("BookRentalId");
+                    b.HasKey("BorrowerId");
 
-                    b.HasIndex("BookId")
-                        .IsUnique();
+                    b.ToTable("Borrowers");
+                });
 
-                    b.ToTable("BookRentals");
+            modelBuilder.Entity("DataLayer.Entities.Book", b =>
+                {
+                    b.HasOne("DataLayer.Entities.Borrower", "Borrower")
+                        .WithMany("Books")
+                        .HasForeignKey("BorrowerId");
                 });
 
             modelBuilder.Entity("DataLayer.Entities.BookAuthor", b =>
@@ -119,15 +123,6 @@ namespace DataLayer.Migrations
                     b.HasOne("DataLayer.Entities.Book", "Book")
                         .WithMany("AuthorsLink")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DataLayer.Entities.BookRental", b =>
-                {
-                    b.HasOne("DataLayer.Entities.Book", null)
-                        .WithOne("BookRental")
-                        .HasForeignKey("DataLayer.Entities.BookRental", "BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

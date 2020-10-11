@@ -26,6 +26,9 @@
                 IsChecked="False"
                 Command="{Binding SwitchEditModeCommand}"
                 CommandParameter="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"/>
+            <MenuItem
+                Header="Export books..." 
+                Command="{Binding ExportBooks}"/>
         </ContextMenu>
     </Window.ContextMenu>
     <DockPanel Margin="3">

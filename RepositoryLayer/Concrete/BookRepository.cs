@@ -38,13 +38,13 @@ namespace RepositoryLayer.Concrete
 
         public void DeleteBookRentalByBookId(int bookId)
         {
-            var bookRental = ctx.Books.Include(i => i.BookRental)
+            var borrower = ctx.Books.Include(i => i.Borrower)
                 .Single(x => x.BookId == bookId)
-                .BookRental;
+                .Borrower;
 
-            if (bookRental == null) return;
+            if (borrower == null) return;
 
-            ctx.Remove(bookRental);
+            ctx.Remove(borrower);
             ctx.SaveChanges();
         }
 
@@ -54,7 +54,7 @@ namespace RepositoryLayer.Concrete
                       .AsNoTracking()
                       .Include(x => x.AuthorsLink)
                           .ThenInclude(x => x.Author)
-                      .Include(x => x.BookRental)
+                      .Include(x => x.Borrower)
                       .ToList();
         }
 
@@ -64,7 +64,7 @@ namespace RepositoryLayer.Concrete
                 .AsNoTracking()
                 .Include(x => x.AuthorsLink)
                 .ThenInclude(x => x.Author)
-                .Include(x => x.BookRental)
+                .Include(x => x.Borrower)
                 .SingleOrDefault(x => x.Isbn == isbn);
         }
 
@@ -74,7 +74,7 @@ namespace RepositoryLayer.Concrete
                 .AsNoTracking()
                 .Include(x => x.AuthorsLink)
                 .ThenInclude(x => x.Author)
-                .Include(x => x.BookRental)
+                .Include(x => x.Borrower)
                 .SingleOrDefault(x => x.BookId == id);
         }
 

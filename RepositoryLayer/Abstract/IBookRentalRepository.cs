@@ -5,8 +5,8 @@ using System.Text;
 
 namespace RepositoryLayer.Abstract
 {
-    public interface IBookRentalRepository : IRepository<BookRental>
+    public interface IBookRentalRepository : IRepository<Borrower>
     {
-        BookRental GetByBookId(int bookId);
+        Borrower GetByBookId(int bookId);
     }
 }
