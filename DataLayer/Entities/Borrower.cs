@@ -12,6 +12,9 @@ namespace DataLayer.Entities
         public string Name { get; set; }
         public DateTime DateBorrowing { get; set; }
 
+        [MaxLength(255)]
+        public string Note { get; set; }
+
         // Relationships
         public ICollection<Book> Books { get; set; }
     }
