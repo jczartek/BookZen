@@ -24,7 +24,7 @@ namespace DataLayer.Repository
 
             if (spec != null)
             {
-                query = query.Where(spec.Specification);
+                query = query.Where(spec);
             }
 
             return await query.ToListAsync();
