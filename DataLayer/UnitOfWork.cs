@@ -8,8 +8,14 @@ namespace DataLayer
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContext _ctx = DbCoreContextFactory.Create();
+        private readonly DbContext _ctx;
         private Hashtable _repositories;
+
+        public UnitOfWork(DbContext ctx)
+        {
+            _ctx = ctx;
+        }
+
         public async Task<int> Commit()
         {
             return await _ctx.SaveChangesAsync();
