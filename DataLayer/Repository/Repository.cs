@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,9 +20,14 @@ namespace DataLayer.Repository
             return await _ctx.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec = null)
+        public async Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
             IQueryable<TEntity> query = _ctx.Set<TEntity>();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
 
             if (spec != null)
             {

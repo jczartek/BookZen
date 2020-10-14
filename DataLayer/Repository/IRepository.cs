@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataLayer
@@ -8,7 +9,7 @@ namespace DataLayer
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<TEntity> Get(int id);
-        Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec);
+        Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include);
 
         void Add(TEntity entity);
         void Update(TEntity entity);
