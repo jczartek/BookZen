@@ -37,9 +37,11 @@ namespace DataLayer
 
         public static FilterSpecification<TEntity> operator !(FilterSpecification<TEntity> original)
         {
-            var body = Expression.Negate(original.SpecificationExpression.Body);
-            var lambda = Expression.Lambda<Func<TEntity, bool>>(body, original.SpecificationExpression.Parameters);
-            return new ConstructedSpecification<TEntity>(lambda);
+            var arg = Expression.Parameter(typeof(TEntity));
+            var expr = original.SpecificationExpression;
+            var notExpr = Expression.Not(new ReplaceParameterVisitor { { expr.Parameters.Single(), arg } }.Visit(expr.Body));
+
+            return new ConstructedSpecification<TEntity>(Expression.Lambda<Func<TEntity, bool>>(notExpr, arg));
         }
 
         private static FilterSpecification<TEntity> CombineSpecification(FilterSpecification<TEntity> left, FilterSpecification<TEntity> right, Func<Expression, Expression, BinaryExpression> combiner)

@@ -9,7 +9,7 @@ namespace DataLayer
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<TEntity> Get(int id);
-        Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include);
+        Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
 
         void Add(TEntity entity);
         void Update(TEntity entity);
