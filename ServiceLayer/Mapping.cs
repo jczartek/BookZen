@@ -2,6 +2,7 @@
 using DataLayer.Entities;
 using RepositoryLayer.Abstract;
 using RepositoryLayer.Concrete;
+using ServiceLayer.BookService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,13 @@ namespace ServiceLayer
                 .ReverseMap()
                 .ForPath(d => d.AuthorsLink, ops => ops.MapFrom(src => MapBookAutor(src)))
                 .ForPath(d => d.Borrower, ops => ops.MapFrom(src => MapBookRental(src)));
+
+                _ = cfg.CreateMap<Book, BookShortItem>()
+                .ForMember(d => d.Authors, ops => ops.MapFrom(s => string.Join(",", s.AuthorsLink.Select(a => a.Author.Name))))
+                .ForMember(x => x.IsRead, ops => ops.MapFrom(s => s.ReadDate != null))
+                .ForMember(x => x.IsBorrowed, ops => ops.MapFrom(s => s.BorrowerId != null));
             });
+
         }
 
         public static Mapper Mapper()
