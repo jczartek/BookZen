@@ -10,9 +10,25 @@ namespace BookZen.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+
+        public MainViewModel()
+        {
+            ServiceFactory.CreateBookService(async service => { Books = await service.GetAllBooksAsync(); });
+        }
+
+        private List<BookDto> books;
         public List<BookDto> Books
         {
-            get => ServiceFactory.CreateBookService(service => { return service.GetAllBooks(); });
+            get
+            {
+                return books;
+            }
+            
+            set
+            {
+                books = value;
+                RaisePropertiesChanged(nameof(Books));
+            }
         }
 
         private bool editMode;
@@ -60,7 +76,7 @@ namespace BookZen.ViewModels
                     (parameter) =>
                     {
                         var bookDto = ServiceFactory.CreateBookService((service, id) => service.GetBookById(id), (int)parameter);
-                        new DetailsBookDialog(bookDto).ShowDialog();
+                        //new DetailsBookDialog(bookDto).ShowDialog();
                     });
             }
         }
@@ -74,7 +90,7 @@ namespace BookZen.ViewModels
                     (parameter) =>
                     {
                         var bookDto = ServiceFactory.CreateBookService((service, id) => service.GetBookById(id), (int)parameter);
-                        new InputBookDialog(bookDto).ShowDialog();
+                        //new InputBookDialog(bookDto).ShowDialog();
                         RaisePropertiesChanged(nameof(Books));
                     });
             }
