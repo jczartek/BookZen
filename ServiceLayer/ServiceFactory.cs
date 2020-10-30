@@ -1,6 +1,6 @@
 ﻿using RepositoryLayer;
-using ServiceLayer.Concrete;
 using System;
+using Unity;
 
 namespace ServiceLayer
 {
@@ -8,7 +8,7 @@ namespace ServiceLayer
     {
         public static IBookService CreateBookService()
         {
-            return new BookService(RepositoryFactory.CreateBookRepository());
+            return IoC.Instance.Container.Resolve<IBookService>();
         }
 
         public static void CreateBookService(Action<IBookService> serve)

@@ -2,7 +2,6 @@
 using DataLayer.Entities;
 using RepositoryLayer.Abstract;
 using RepositoryLayer.Concrete;
-using ServiceLayer.BookService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

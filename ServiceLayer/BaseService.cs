@@ -1,20 +1,23 @@
-﻿using RepositoryLayer.Abstract;
+﻿using DataLayer;
+using RepositoryLayer.Abstract;
 using System;
 
-namespace ServiceLayer.Concrete
+namespace ServiceLayer
 {
     public class BaseService<TEntity> : IDisposable
     {
-        protected IRepository<TEntity> Repository { get; set; }
+        //protected RepositoryLayer.Abstract.IRepository<TEntity> Repository { get; set; }
+        protected IUnitOfWork UnitOfWork { get; set; }
 
-        protected BaseService(IRepository<TEntity> repository)
+        protected BaseService(IUnitOfWork unitOfWork)
         {
-            this.Repository = repository;
+            this.UnitOfWork = unitOfWork;
         }
 
         public void Dispose()
         {
-            Repository.Dispose();
+            //Repository.Dispose();
+            //UnitOfWork.Dispose();
         }
     }
 }
