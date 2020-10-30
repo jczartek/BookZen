@@ -5,7 +5,6 @@ using DataLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System;
 using MockQueryable.Moq;
 using ServiceLayer.Specifications;
@@ -53,7 +52,7 @@ namespace TestsLayer
             using var uow = new UnitOfWork(ctx.Object);
             var repository = uow.Repository<Book>();
 
-            var b = await repository.GetAll();
+            var b = await repository.GetAllAsync();
 
             Assert.Equal(3, b.Count());
         }
@@ -66,7 +65,7 @@ namespace TestsLayer
             using var uow = new UnitOfWork(ctx.Object);
             var repository = uow.Repository<Book>();
 
-            var b = await repository.GetAll(new ReadBookFilterSpec());
+            var b = await repository.GetAllAsync(new ReadBookFilterSpec());
 
             Assert.Single(b);
             Assert.Equal(1, b.First().BookId);
@@ -80,7 +79,7 @@ namespace TestsLayer
             using var uow = new UnitOfWork(ctx.Object);
             var repository = uow.Repository<Book>();
 
-            var b = await repository.GetAll(new BorrowedBooksFilter());
+            var b = await repository.GetAllAsync(new BorrowedBooksFilter());
 
             Assert.Single(b);
             Assert.Equal(3, b.First().BookId);
@@ -95,7 +94,7 @@ namespace TestsLayer
             using var uow = new UnitOfWork(ctx.Object);
             var repository = uow.Repository<Book>();
 
-            var b = await repository.GetAll((new BorrowedBooksFilter() | new ReadBookFilterSpec()));
+            var b = await repository.GetAllAsync((new BorrowedBooksFilter() | new ReadBookFilterSpec()));
 
             Assert.Equal(2, b.Count());
             Assert.Equal(1, b.First().BookId);
@@ -112,7 +111,7 @@ namespace TestsLayer
 
             var spec = !(new BorrowedBooksFilter() | new ReadBookFilterSpec());
 
-            var b = await repository.GetAll(spec);
+            var b = await repository.GetAllAsync(spec);
 
             Assert.Single(b);
             Assert.Equal(2, b.First().BookId);
