@@ -1,57 +1,75 @@
-﻿using DataLayer.Entities;
+﻿using DataLayer;
+using DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Abstract;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace ServiceLayer.Concrete
+namespace ServiceLayer
 {
     public class BookService : BaseService<Book>, IBookService
     {
-        public BookService(IRepository<Book> repository) : base(repository) { }
+        public BookService(IUnitOfWork unitOfWork) : base(unitOfWork) { }
         
-        public void AddBook(BookDto dto)
+        public async void AddBook(BookDto dto)
         {
             if (dto != null)
             {
                 var book = Mapping.Mapper().Map<Book>(dto);
-                Repository.Add(book);
-                dto.BookId = book.BookId;
+                //Repository.Add(book);
+                UnitOfWork.Repository<Book>().Add(book);
+                await UnitOfWork.Commit();
+                //dto.BookId = book.BookId;
             }
         }
 
-        public void DeleteBookById(int id)
+        public async void DeleteBookById(int id)
         {
-            var book = Repository.GetById(id);
+            var book = await UnitOfWork.Repository<Book>().Get(id);
 
-            if (book != null) Repository.Delete(book);
+            if (book != null) UnitOfWork.Repository<Book>().Delete(book);
+            await UnitOfWork.Commit();
         }
 
         public List<BookDto> GetAllBooks()
         {
-            return Repository
-                .GetAll()
+            return UnitOfWork
+                .Repository<Book>()
+                .GetAll(include: source => source
+                   .Include(i => i.AuthorsLink)
+                   .ThenInclude(i => i.Author))
                 .Select(x => Mapping.Mapper().Map<BookDto>(x))
                 .ToList();
         }
 
-        public BookDto GetBookById(int id)
+        public async Task<List<BookDto>> GetAllBooksAsync()
         {
-            var book = Repository.GetById(id);
+            var books = await UnitOfWork.Repository<Book>()
+                .GetAllAsync(include: source => source
+                   .Include(i => i.AuthorsLink)
+                   .ThenInclude(i => i.Author));
+
+            return await Task.Run(() => books.Select(x => Mapping.Mapper().Map<BookDto>(x)).ToList());
+        }
+
+        public async Task<BookDto> GetBookById(int id)
+        {
+            var book = await UnitOfWork.Repository<Book>().Get(id);
 
             if (book != null)
-                return Mapping.Mapper().Map<BookDto>(book);
+                return await Task.FromResult(Mapping.Mapper().Map<BookDto>(book));
 
             return null;
         }
 
         public BookDto GetBookByIsbn(string isbn)
         {
-            var book = (Repository as IBookRepository).GetBookByIsbn(isbn);
+            /*var book = (Repository as IBookRepository).GetBookByIsbn(isbn);
 
             if (book != null)
                 return Mapping.Mapper().Map<BookDto>(book);
-
+            */
             return null;
         }
 
@@ -60,7 +78,8 @@ namespace ServiceLayer.Concrete
             if (dto != null)
             {
                 var book = Mapping.Mapper().Map<Book>(dto);
-                Repository.Update(book);
+                UnitOfWork.Repository<Book>().Update(book);
+                UnitOfWork.Commit();
             }
         }
     }
