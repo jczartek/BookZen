@@ -20,7 +20,7 @@ namespace DataLayer.Repository
             return await _ctx.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        public List<TEntity> GetAll(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
             IQueryable<TEntity> query = _ctx.Set<TEntity>();
 
@@ -34,7 +34,7 @@ namespace DataLayer.Repository
                 query = query.Where(spec);
             }
 
-            return await query.ToListAsync();
+            return query.ToList();
         }
         public void Add(TEntity entity)
         {
@@ -49,6 +49,23 @@ namespace DataLayer.Repository
         public void Delete(TEntity entity)
         {
             _ctx.Set<TEntity>().Remove(entity);
+        }
+
+        public async Task<List<TEntity>> GetAllAsync(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        {
+            IQueryable<TEntity> query = _ctx.Set<TEntity>();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            if (spec != null)
+            {
+                query = query.Where(spec);
+            }
+
+            return await query.AsNoTracking().ToListAsync();
         }
     }
 }

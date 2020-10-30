@@ -9,7 +9,9 @@ namespace DataLayer
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<TEntity> Get(int id);
-        Task<IReadOnlyList<TEntity>> GetAll(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
+        List<TEntity> GetAll(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
+
+        Task<List<TEntity>> GetAllAsync(FilterSpecification<TEntity> spec = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
 
         void Add(TEntity entity);
         void Update(TEntity entity);
