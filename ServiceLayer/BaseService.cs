@@ -1,12 +1,12 @@
 ﻿using DataLayer;
-using RepositoryLayer.Abstract;
 using System;
 
 namespace ServiceLayer
 {
     public class BaseService<TEntity> : IDisposable
     {
-        //protected RepositoryLayer.Abstract.IRepository<TEntity> Repository { get; set; }
+        private bool disposed;
+
         protected IUnitOfWork UnitOfWork { get; set; }
 
         protected BaseService(IUnitOfWork unitOfWork)
@@ -16,8 +16,16 @@ namespace ServiceLayer
 
         public void Dispose()
         {
-            //Repository.Dispose();
-            //UnitOfWork.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+
+            if (disposing) UnitOfWork.Dispose();
+
+            disposed = true;
         }
     }
 }

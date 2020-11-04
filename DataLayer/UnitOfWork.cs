@@ -10,6 +10,7 @@ namespace DataLayer
     {
         private readonly DbContext _ctx;
         private Hashtable _repositories;
+        private bool disposed;
 
         public UnitOfWork(DbContext ctx)
         {
@@ -23,7 +24,16 @@ namespace DataLayer
 
         public void Dispose()
         {
-            _ctx.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+
+            if (disposing) _ctx.Dispose();
+
+            disposed = true;
         }
 
         public IRepository<TEntity> Repository<TEntity>() where TEntity : class
